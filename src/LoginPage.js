@@ -59,7 +59,7 @@ const LoginPage = () => {
   };
 
   const tryLogin = async (login, password) => {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/`)
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/`)
     console.log(response)
   }
 
