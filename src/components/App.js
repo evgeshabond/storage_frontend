@@ -1,23 +1,20 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {Switch, Route, useHistory, Redirect } from 'react-router-dom'
-import { getToken, setToken } from './localStorage/localStorage'
+import { getToken, setToken } from '../localStorage/localStorage'
 
 //redux actions
-import { updateUser, updateToken } from "./redux/Actions";
+import { updateUser, updateToken } from "../redux/Actions";
 
 //API
-import api_getUserWithToken from './api/api_getUserWithToken'
-
-import logo from "./logo.svg";
-// import "./App.css";
+import api_getUserWithToken from '../api/api_getUserWithToken'
 
 //Material ui Font
 import "fontsource-roboto";
 
 //Components
-import LoginPage from "./components/LoginPage";
-import Dashboard from "./components/Dashboard";
+import LoginPage from "./LoginPage";
+import Dashboard from "./Dashboard";
 
 
 function App(props) {
