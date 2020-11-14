@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux'
 
 //Material-ui
 import {
@@ -11,6 +11,9 @@ import {
   Link,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+
+//API
+import api_login from './api/api_login'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,10 +43,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoginPage = () => {
+const LoginPage = (props) => {
   const classes = useStyles();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState('');
+  const dispatch = useDispatch()
+  const counterValue = useSelector(state => state.counter.value)
+  
+  console.log(counterValue)
+
+  const handleLogin = async (login, password) => {
+    try{
+      const response1 = await api_login(login, password)
+      setError('')
+      props.setToken(response1.data.token)      
+    } catch(e) {
+      setError('Failed to log in. Check login/password')
+      setLogin('')
+      setPassword('')
+    }    
+  }
 
   const handleChange = async (event) => {
     switch (event.target.id) {
@@ -54,17 +74,10 @@ const LoginPage = () => {
         await setPassword(event.target.value);
         break;
     }
-    console.log('login is ', login)
-    console.log('password is ', password)
+
   };
 
-  const tryLogin = async (login, password) => {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/login`, {
-        login: 'admin',
-        password: 'admin'
-    })
-    console.log(response)
-  }
+
 
   return (
     <div className={classes.root}>
@@ -93,7 +106,7 @@ const LoginPage = () => {
             />
           </Grid>
           <Grid item>
-            <Button variant="contained" color="primary" fullWidth size="medium" onClick={tryLogin}>
+            <Button variant="contained" color="primary" fullWidth size="medium" onClick={() => handleLogin(login, password)}>
               Login
             </Button>
           </Grid>
@@ -109,13 +122,18 @@ const LoginPage = () => {
               <Typography>Or login as </Typography>
             </Grid>
             <Grid item>
-              <Link>Admin</Link>
+              <Button color='primary' onClick={() => handleLogin('admin', 'admin')}>Admin</Button>
             </Grid>
             <Grid item>
-              <Link>User1</Link>
+              <Button color='primary' onClick={() => handleLogin('user1', 'user1')}>User1</Button>
             </Grid>
             <Grid item>
-              <Link>User2</Link>
+              <Button color='primary' onClick={() => handleLogin('user2', 'user2')}>User2</Button>
+            </Grid>
+            <Grid item>
+              <Button color='primary' onClick={() => dispatch({
+                type: 'counter/incremented'
+              })}>Count</Button>
             </Grid>
           </Grid>
         </Grid>
