@@ -31,7 +31,7 @@ const userReducer = (
 ) => {
   switch (action.type) {
     case "user/updateUser":
-      return { ...state, ...action.user, token: action.token };
+      return { ...state, ...action.user };
     case "user/updateUserTest":
       return { ...state, name: "updated" };
     default:

@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {Switch, Route, useHistory, Redirect } from 'react-router-dom'
-import { getToken } from './localStorage/localStorage'
+import { getToken, setToken } from './localStorage/localStorage'
+
+//redux actions
+import { updateUser, updateToken } from "./redux/Actions";
+
+//API
+import api_getUserWithToken from './api/api_getUserWithToken'
 
 import logo from "./logo.svg";
 // import "./App.css";
@@ -17,23 +23,39 @@ import Dashboard from "./components/Dashboard";
 function App(props) {
   const user = useSelector((state) => state.user);
   const history = useHistory()
-  const [isLoading, setIsLoading] = useState(true)
-  const localToken = getToken('token')
+  const dispatch = useDispatch()
 
-  useEffect(() => {    
-    if (!user.login) {
-      if (localToken) {
-        
-      }
-      if (!localToken) {
-        history.push('/login')
-      }
-      
+
+  //Check token in localStorage
+  //if no token -> redirect to LoginPage
+  //if there is token -> try authorize
+  const loadToken = async () => {
+    let localToken = await getToken()
+    if (!localToken) history.push('/login')
+    if (localToken) {
+      authorizeWithToken(localToken)
     }
-    if (user.login) history.push('/dashboard')
-  }, [user, localToken])
+  }
 
-
+  //try authorize
+  //if success - push to dashboard, update redux user, update redux token
+  //if failed - remove bad token from LS and push to login page
+  const authorizeWithToken = async (token) => {
+    try {
+      const response = await api_getUserWithToken(token, 0);
+      history.push('/dashboard')
+      dispatch(updateUser(response.data))
+      dispatch(updateToken(token))
+    }catch(e) {
+      setToken('')
+      history.push('/login')
+    }    
+  }
+  
+  //check token
+  useEffect(() => {
+    loadToken()
+  }, [])
 
   return (
     <>    
