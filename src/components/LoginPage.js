@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from "react-redux";
+
+import {setToken} from '../localStorage/localStorage'
 
 //Material-ui
 import {
@@ -12,8 +14,11 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
+//redux actions
+import { updateUser, updateToken } from "../redux/Actions";
+
 //API
-import api_login from './api/api_login'
+import api_login from "../api/api_login";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,23 +52,25 @@ const LoginPage = (props) => {
   const classes = useStyles();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState('');
-  const dispatch = useDispatch()
-  const counterValue = useSelector(state => state.counter.value)
-  
-  console.log(counterValue)
+  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const counterValue = useSelector((state) => state.counter.value);
 
   const handleLogin = async (login, password) => {
-    try{
-      const response1 = await api_login(login, password)
-      setError('')
-      props.setToken(response1.data.token)      
-    } catch(e) {
-      setError('Failed to log in. Check login/password')
-      setLogin('')
-      setPassword('')
-    }    
-  }
+    try {
+      //get {user, token}
+      const response = await api_login(login, password);
+      //update redux user state with user info and token
+      dispatch(updateUser(response.data));
+      dispatch(updateToken(response.data));
+      setError("");
+      setToken(response.data.token);
+    } catch (e) {
+      setError("Failed to log in. Check login/password");
+      setLogin("");
+      setPassword("");
+    }
+  };
 
   const handleChange = async (event) => {
     switch (event.target.id) {
@@ -74,10 +81,9 @@ const LoginPage = (props) => {
         await setPassword(event.target.value);
         break;
     }
-
   };
 
-
+  
 
   return (
     <div className={classes.root}>
@@ -106,7 +112,13 @@ const LoginPage = (props) => {
             />
           </Grid>
           <Grid item>
-            <Button variant="contained" color="primary" fullWidth size="medium" onClick={() => handleLogin(login, password)}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              size="medium"
+              onClick={() => handleLogin(login, password)}
+            >
               Login
             </Button>
           </Grid>
@@ -122,20 +134,34 @@ const LoginPage = (props) => {
               <Typography>Or login as </Typography>
             </Grid>
             <Grid item>
-              <Button color='primary' onClick={() => handleLogin('admin', 'admin')}>Admin</Button>
+              <Button
+                color="primary"
+                onClick={() => handleLogin("admin", "admin")}
+              >
+                Admin
+              </Button>
             </Grid>
             <Grid item>
-              <Button color='primary' onClick={() => handleLogin('user1', 'user1')}>User1</Button>
+              <Button
+                color="primary"
+                onClick={() => handleLogin("user1", "user1")}
+              >
+                User1
+              </Button>
             </Grid>
             <Grid item>
-              <Button color='primary' onClick={() => handleLogin('user2', 'user2')}>User2</Button>
-            </Grid>
-            <Grid item>
-              <Button color='primary' onClick={() => dispatch({
-                type: 'counter/incremented'
-              })}>Count</Button>
-            </Grid>
+              <Button
+                color="primary"
+                onClick={() => handleLogin("user2", "user2")}
+              >
+                User2
+              </Button>
+            
           </Grid>
+          </Grid>
+            {!!error && <Grid item>
+              <Typography color='secondary'>{error}</Typography>
+            </Grid>}
         </Grid>
       </Paper>
     </div>

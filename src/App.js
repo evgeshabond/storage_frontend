@@ -1,4 +1,7 @@
-import { Provider } from "react-redux";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import {Switch, Route, useHistory, Redirect } from 'react-router-dom'
+import { getToken } from './localStorage/localStorage'
 
 import logo from "./logo.svg";
 // import "./App.css";
@@ -6,28 +9,39 @@ import logo from "./logo.svg";
 //Material ui Font
 import "fontsource-roboto";
 
-//store
-import store from './redux/store'
-
 //Components
-import LoginPage from "./LoginPage";
+import LoginPage from "./components/LoginPage";
+import Dashboard from "./components/Dashboard";
 
-function App() {
-  const myStorage = window.localStorage;
 
-  const setToken = (token) => {
-    myStorage.setItem("token", JSON.stringify(token));
-  };
-  const getToken = async (token) => {
-    const response = await myStorage.getItem("token");
-    return JSON.parse(response);
-  };
+function App(props) {
+  const user = useSelector((state) => state.user);
+  const history = useHistory()
+  const [isLoading, setIsLoading] = useState(true)
+  const localToken = getToken('token')
+
+  useEffect(() => {    
+    if (!user.login) {
+      if (localToken) {
+        
+      }
+      if (!localToken) {
+        history.push('/login')
+      }
+      
+    }
+    if (user.login) history.push('/dashboard')
+  }, [user, localToken])
+
+
 
   return (
-    <>
-      <Provider store={store}>
-        <LoginPage setToken={setToken} />
-      </Provider>
+    <>    
+    <Switch>
+      <Route path='/login' component={LoginPage}/>
+      <Route path='/dashboard' component={Dashboard} />
+      <Route path='*' render={(props) => <Redirect to='/login' {...props}/>} />
+    </Switch>
     </>
   );
 }
