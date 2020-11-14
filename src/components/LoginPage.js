@@ -19,6 +19,7 @@ import { updateUser, updateToken } from "../redux/Actions";
 
 //API
 import api_login from "../api/api_login";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,11 +51,11 @@ const useStyles = makeStyles((theme) => ({
 
 const LoginPage = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory()
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
-  const counterValue = useSelector((state) => state.counter.value);
 
   const handleLogin = async (login, password) => {
     try {
@@ -62,9 +63,10 @@ const LoginPage = (props) => {
       const response = await api_login(login, password);
       //update redux user state with user info and token
       dispatch(updateUser(response.data));
-      dispatch(updateToken(response.data));
-      setError("");
+      dispatch(updateToken(response.data));      
       setToken(response.data.token);
+      setError("");
+      history.push('/dashboard')
     } catch (e) {
       setError("Failed to log in. Check login/password");
       setLogin("");
