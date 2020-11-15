@@ -38,9 +38,7 @@ import {
   }));
 
 const Dashboard = (props) => {
-
     const classes = useStyles()
-
     return (
         <div className={classes.root}>This is dashboard page</div>
     )

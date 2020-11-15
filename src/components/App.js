@@ -22,7 +22,6 @@ function App(props) {
   const history = useHistory()
   const dispatch = useDispatch()
 
-
   //Check token in localStorage
   //if no token -> redirect to LoginPage
   //if there is token -> try authorize

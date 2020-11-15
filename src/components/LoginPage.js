@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
 import {setToken} from '../localStorage/localStorage'
 
 //Material-ui
@@ -83,9 +82,7 @@ const LoginPage = (props) => {
         await setPassword(event.target.value);
         break;
     }
-  };
-
-  
+  };  
 
   return (
     <div className={classes.root}>
