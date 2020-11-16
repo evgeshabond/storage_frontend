@@ -58,7 +58,7 @@ const LoginPage = (props) => {
 
   const handleLogin = async (login, password) => {
     try {
-      //get {user, token}
+      //get {user, token} 
       const response = await api_login(login, password);
       //update redux user state with user info and token
       dispatch(updateUser(response.data));
