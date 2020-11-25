@@ -1,12 +1,13 @@
 //Material-ui
 import {
-    Paper,
-    Grid,
-    TextField,
-    Button,
-    Typography,
-    Link,
+AppBar,
+Tollbar,
+Typography,
+Button,
+IconButton,
+
   } from "@material-ui/core";
+  import MenuIcon from '@material-ui/icons/Menu';
   import { makeStyles } from "@material-ui/core/styles";
 
   const useStyles = makeStyles((theme) => ({
@@ -16,31 +17,19 @@ import {
       backgroundColor: "green",
       background: "linear-gradient(315deg, #d9e4f5 0%, #f5e3e6 74%)",
     },
-    paper: {
-      padding: theme.spacing(5),
-      [theme.breakpoints.down("sm")]: {
-        padding: theme.spacing(2),
-      },
-      position: "absolute",
-      minWidth: "300px",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-    },
-    demoField: {
-      position: "absolute",
-      top: "0",
-      left: "0",
-      width: "100%",
-      heigth: "100%",
-      backgroundColor: "#ffffff",
-    },
+    appBar: {
+      
+    }
   }));
 
 const Dashboard = (props) => {
     const classes = useStyles()
     return (
-        <div className={classes.root}>This is dashboard page</div>
+        <div className={classes.root}>
+          <AppBar position='static'>
+
+          </AppBar>
+        </div>
     )
 }
 

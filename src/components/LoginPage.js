@@ -61,8 +61,9 @@ const LoginPage = (props) => {
       //get {user, token} 
       const response = await api_login(login, password);
       //update redux user state with user info and token
-      dispatch(updateUser(response.data));
-      dispatch(updateToken(response.data));      
+      console.log(response.data)
+      dispatch(updateUser(response.data.user));
+      dispatch(updateToken(response.data.token));      
       setToken(response.data.token);
       setError("");
       history.push('/dashboard')
